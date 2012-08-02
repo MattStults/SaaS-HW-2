@@ -7,6 +7,17 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params[:ratings] != nil
+      if params[:ratings].respond_to? :keys
+        @ratings_shown = params[:ratings].keys
+      else
+        @ratings_shown = params[:ratings]
+      end
+    else
+      @ratings_shown = []
+    end
+
+    @all_ratings = Movie.ratings
     @sortBy = params[:sortBy]
     if @sortBy == 'release_date'
       order = "release_date"
@@ -21,7 +32,7 @@ class MoviesController < ApplicationController
     else
       order += " ASC"
     end
-    @movies = Movie.find :all, :order => order 
+    @movies = Movie.find :all, :order => order, :conditions => {:rating => @ratings_shown} 
   end
 
   def new
