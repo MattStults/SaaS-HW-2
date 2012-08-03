@@ -9,7 +9,7 @@ class MoviesController < ApplicationController
   def index_validate_params? params
     session[:ratings] = params[:ratings] if !params[:ratings].nil?
     session[:sortBy] = params[:sortBy] if !params[:sortBy].nil?
-    !((params[:ratings].nil? && !session[:ratings].nil?) || 
+    !((params[:ratings].nil? && session[:ratings]!=[] && !session[:ratings].nil?) || 
         (params[:sortBy].nil? && !session[:sortBy].nil?))
   end
 
