@@ -6,7 +6,22 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  def index_validate_params? params
+    session[:ratings] = params[:ratings] if !params[:ratings].nil?
+    session[:sortBy] = params[:sortBy] if !params[:sortBy].nil?
+    session[:ratings] = [] if session[:ratings].nil?
+    session[:sortBy] = "none" if session[:sortBy].nil?
+    !(params[:ratings].nil? || params[:sortBy].nil?)
+  end
+
   def index
+    unless index_validate_params? params
+      flash.keep
+      redirect_to(movies_path( 
+        :ratings => session[:ratings], 
+        :sortBy => session[:sortBy]))
+    end
+
     if params[:ratings] != nil
       if params[:ratings].respond_to? :keys
         @ratings_shown = params[:ratings].keys
